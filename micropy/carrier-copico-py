@@ -1,10 +1,13 @@
+# This is strickyak's spoonfeed carrier modified for the CoPiCo
+
 import time
-from time import sleep
 
 import machine, rp2
-from machine import Pin
-from rp2 import PIO
 
+FIRST_DATA_PIN = 0
+NUM_DATA_PINS = 8
+FIRST_ADDRESS_PIN = 8
+NUM_ADDRESS_PINS = 10 # Actually 9 since we're reallocating GPIO 17 to triggering the oscilloscope
 READ_NOT_WRITE_PIN = 18
 RESETN_PIN = 19
 NETIO_SEL_N_PIN = 20
@@ -163,5 +166,5 @@ Halt.value(0)
 pio0.remove_program(ldd_immediate_std_extended_prog)
 print("DONE step")
 while True:
-    Halt = Pin(13, Pin.OUT)
+    Halt = machine.Pin(13, machine.Pin.OUT)
     Halt.value(0)
