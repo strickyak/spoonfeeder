@@ -26,13 +26,16 @@ int main() {
       unsigned a1 = 255&((base+i)>>8);
       unsigned a2 = 255&((base+i)>>0);
 
-      printf("    ( 0x%02x%02x%02x%02x, 0x%02x%02x%02x%02x ),\n",
+      printf("    ( 0x%02x%02x%02x%02x, 0x%02x%02x%02x%02x ), ## LDD #$%04x ; STD $%04x\n",
           b2, b1, LDD_IMMEDIATE, 0xFF,
-          0, a2, a1, STD_EXTENDED);
+          0, a2, a1, STD_EXTENDED,
+	  (b1<<8)+b2,
+	  (a1<<8)+a2);
     }
   }
-  printf("    ( 0x%02x%02x%02x%02x, 0x%02x%02x%02x%02x ),\n",
+  printf("    ( 0x%02x%02x%02x%02x, 0x%02x%02x%02x%02x ), ## JMP $%04x\n",
       0, 0, LDD_IMMEDIATE, 0xFF,
-      0, q[4], q[3], JMP_EXTENDED);
+      0, q[4], q[3], JMP_EXTENDED,
+      (q[3]<<8)+q[4]);
   printf("]\n");
 }

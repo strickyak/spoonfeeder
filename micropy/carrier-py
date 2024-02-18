@@ -137,19 +137,7 @@ sm1.active(False)
 pio0.remove_program(onreset_prog)
 pio0.add_program(ldd_immediate_std_extended_prog)
 
-MSG = 'SO RAISE YOUR JOYSTICKS, RAISE YOUR KEYBOARDS, LET CRTS ILLUMINATE THE WAY, WITH EVERY LINE, WITH EVERY BYTE, FOR COCO, WE PLEDGE ALLEGIANCE, THIS DAY!'
-MSG = MSG+' ' if 1&len(MSG) else MSG
-PairsOfWords = []
-LDD_IMMEDIATE, STD_EXTENDED = 0xCC, 0xFD
-
-for i in range(len(MSG)/2):
-    b1, b2 = 63&ord(MSG[i+i]), 63&ord(MSG[i+i+1])
-    w1 = (b2<<24) | (b1<<16) | (LDD_IMMEDIATE<<8) | 0xFF
-    w2 = ((i+i)<<16) | STD_EXTENDED
-    PairsOfWords.append((w1, w2, b1, b2))
-
-
-for (w1, w2, b1, b2) in PairsOfWords:
+for (w1, w2) in PairsOfWords:
   sm2 = pio0.state_machine(2) # which state machine in pio
   sm2.init(ldd_immediate_std_extended_prog,
     freq=125_000_000,
@@ -161,11 +149,14 @@ for (w1, w2, b1, b2) in PairsOfWords:
   sm2.put(w1)  # ff=outputs CC=LDD_immediate $58='X' $59='Y'
   sm2.put(w2)  # FD=STD_extended 00=inputs
   sm2.active(True)
-  print("(%x, %x, %x, %x) Activated sm2. Deactivating." % (w1, w2, b1, b2))
+  print("(%08x, %08x) Activated sm2. Deactivating." % (w1, w2))
   sm2.active(False)
 
-
+Dir.value(1)
+Slenb.value(0)
+Halt.value(0)
 pio0.remove_program(ldd_immediate_std_extended_prog)
-print("DONE")
+print("DONE step3")
 while True:
-    pass
+    Halt = Pin(13, Pin.OUT)
+    Halt.value(0)
