@@ -1,4 +1,4 @@
-all: io_ff78.python life-semi.python step5.py
+all: io_ff78.python life-semi.python step5.py copico5.py
 
 io_ff78.s: io_ff78.c
 	$(HOME)/coco-shelf/bin/gcc6809 -S -Os -std=gnu99 $<
@@ -28,4 +28,7 @@ hello5.python: hello5.decb decb_to_word_pairs
 	./decb_to_word_pairs < $< > $@
 
 step5.py: life-semi.python carrier-py
-	cat $^ > step5.py
+	cat $^ > $@
+
+copico5.py: life-semi.python carrier-copico-py
+	cat $^ > $@
