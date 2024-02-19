@@ -10,7 +10,7 @@ io_ff78.python: io_ff78.decb decb_to_word_pairs
 	./decb_to_word_pairs < $< > $@
 
 life-semi.s: life-semi.c
-	$(HOME)/coco-shelf/bin/gcc6809 -S -Os -std=gnu99 $<
+	$(HOME)/coco-shelf/bin/gcc6809 -S -O2 -std=gnu99 $<
 life-semi.o: life-semi.s
 	$(HOME)/coco-shelf/bin/lwasm --format=obj -o'$@' $<
 life-semi.decb: life-semi.o

@@ -19,8 +19,8 @@ byte S[W*H/4];
 #define S ((volatile byte*)0x0000)
 #endif
 
-#define AA(X,Y) A[(X&(W-1)) + W*(Y&(H-1))]
-#define BB(X,Y) B[(X&(W-1)) + W*(Y&(H-1))]
+#define AA(X,Y) A[((X)&(W-1)) + W*((Y)&(H-1))]
+#define BB(X,Y) B[((X)&(W-1)) + W*((Y)&(H-1))]
 
 #define STOP() { while (1) { ++(S[0]); } }
 
@@ -33,7 +33,7 @@ void Qmemcpy(volatile byte* d, byte* s, word n) {
 
 void show(byte* p) {
 #if unix
-	static gen;
+	static int gen;
 	for (word y=0; y<H; y++) {
 		for (word x=0; x<W; x++) {
 			putchar(p[x + y*W] ? '#' : '.');
@@ -75,6 +75,14 @@ void generation() {
 	}
 }
 
+void AddPentomino(word x) {
+	AA(x+1, 3) = 1;
+	AA(x+2, 3) = 1;
+	AA(x+0, 4) = 1;
+	AA(x+1, 4) = 1;
+	AA(x+1, 5) = 1;
+}
+
 #if unix
   #define WRAPPER main
 #else
@@ -93,18 +101,23 @@ void WRAPPER() {
 	  Qmemset(S, '.', 512);
 	  Qmemset(A, 0, N);
 
-	  for (word i=221; i<N-100; i+=7) A[i]=1;
-	  for (word i=2*N/6; i<5*N/6; i+=9) A[i]=1;
-	  for (word i=5; i<N; i+=13) A[i]=1;
-	  for (word i=N/4; i<N/2; i+=17) A[i]=1;
 	  show(A);
 
 	  while (1) {
+	    for (word x=3; x<W; x+=7) {
+	      AddPentomino(x);
+	      {
+	        Qmemcpy(B, A, N);
+		render();
+	      }
+	      for (word g=0; g<100; g++) {
 		generation();
 		render();
   // STOP();
 		show(B);
 		Qmemcpy(A, B, N);
+	      }
+	    }
 	  }
   }
 }
