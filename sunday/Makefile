@@ -1,4 +1,4 @@
-all: pico-reader.python
+all: pico-reader.decb pico-reader.raw
 
 pico-reader.s: pico-reader.c
 	$(HOME)/coco-shelf/bin/gcc6809 -S -Os -std=gnu99 $<
@@ -9,4 +9,6 @@ prefix.o: prefix.asm
 	$(HOME)/coco-shelf/bin/lwasm --format=obj -o'$@' $<
 
 pico-reader.decb: prefix.o pico-reader.o
-	$(HOME)/coco-shelf/bin/lwlink -obj --script=orgC000.script --entry=_main --output=$@ $^
+	$(HOME)/coco-shelf/bin/lwlink --decb --script=orgC000.script --entry=_start --output=$@ $^
+pico-reader.raw: prefix.o pico-reader.o
+	$(HOME)/coco-shelf/bin/lwlink --raw  --script=orgC000.script --entry=_start --output=$@ $^
