@@ -1,0 +1,31 @@
+Say you have two CocoIOr cartridges (with EEPROM and WizNet)
+named D2 and D4.   D4 contains a production Axiom bootrom.
+D2 is going to get burned.
+
+Each cartridge has two jumpers (or a jumper and a switch) inside.
+
+To use it for booting, D4 should have the jumpers towards the Ethernet Port
+(not towards the edgecard connector).  That is,
+
+  -- D4 uses $FF6[89AB] for wiznet ports
+  -- D4 is write-protected
+
+To burn it, D2 should have the jumpers towards the edgecard connector.
+That is,
+
+  -- D2 uses $FF7[89AB] for wiznet ports (these will be unused)
+  -- D4 is write-enabled
+
+On the mini-MPI, the little switches should be toward the front
+of the coco (toward the user).   D4 should be closest to the coco.
+D2 should be closest to the power plug.
+
+Boot the Coco with DHCP and connect to the Global Lemma Server.
+Go to page 4999.  Launch with @ key.
+
+When it says OK or DONE or something like that, it's done.
+
+NOW remove D4.   Change jumpers on D2 to be like D4.
+Put D2 in the driver's seat, next to the coco.
+
+
