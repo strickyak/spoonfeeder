@@ -1,0 +1,45 @@
+                      (       proto1.asm):00001         ; # Protocol1 for Copico
+                      (       proto1.asm):00002         ; 
+                      (       proto1.asm):00003         ; strick 2024-04-21
+                      (       proto1.asm):00004         ; 
+                      (       proto1.asm):00005         ; ## Command Byte 1: Program Request
+                      (       proto1.asm):00006         ; 
+                      (       proto1.asm):00007         ; Coco will read the Data Port 1024 times,
+                      (       proto1.asm):00008         ; and will save the bytes at $2000-$23FF,
+                      (       proto1.asm):00009         ; and will then jump to $2000.
+                      (       proto1.asm):00010         ; 
+                      (       proto1.asm):00011         ; ## Command Byte 2: Upload Web Request
+                      (       proto1.asm):00012         ; 
+                      (       proto1.asm):00013         ; Coco will write the Data Port 64 times.
+                      (       proto1.asm):00014         ; (The contents of that request may be the
+                      (       proto1.asm):00015         ; path portion of URL, zero-padded.)
+                      (       proto1.asm):00016         ; 
+                      (       proto1.asm):00017         ; ## Command Byte 3: Download Web Response
+                      (       proto1.asm):00018         ; 
+                      (       proto1.asm):00019         ; Coco will read the Data Port 1024 times.
+                      (       proto1.asm):00020         ; The first 1024 bytes returned for the
+                      (       proto1.asm):00021         ; peviously uploaded URL will be read back.
+                      (       proto1.asm):00022         ; 
+                      (       proto1.asm):00023         ; ## Boot Program
+                      (       proto1.asm):00024         ; 
+                      (       proto1.asm):00025         ; This program would suffice to use Program Request
+                      (       proto1.asm):00026         ; to load the program and execute it:
+                      (       proto1.asm):00027         
+     FF7A             (       proto1.asm):00028         ControlPort EQU $FF7A
+     FF7B             (       proto1.asm):00029         DataPort    EQU $FF7B
+                      (       proto1.asm):00030         
+0000                  (       proto1.asm):00031         Start:
+0000 8601             (       proto1.asm):00032                 lda #1         ; "Program Request" Code
+0002 B7FF7A           (       proto1.asm):00033                 sta ControlPort  ; Send the command.
+                      (       proto1.asm):00034         
+0005 8E2000           (       proto1.asm):00035                 ldx #$2000     ; RAM destination
+0008 108E0400         (       proto1.asm):00036                 ldy #1024      ; how many times to load a byte
+000C F6FF7B           (       proto1.asm):00037                 ldb DataPort   ; load the byte
+000F E780             (       proto1.asm):00038         Loop:   stb ,x+        ; save it to RAM
+0011 313F             (       proto1.asm):00039                 leay -1,y      ; decrement counter
+0013 26FA             (       proto1.asm):00040                 bne Loop
+                      (       proto1.asm):00041         
+0015 7E2000           (       proto1.asm):00042                 jmp $2000      ; execute what got loaded.
+0018                  (       proto1.asm):00043         Finish:
+                      (       proto1.asm):00044         
+                      (       proto1.asm):00045         ; HINT: lwasm -r proto1.asm --list=proto1.list
