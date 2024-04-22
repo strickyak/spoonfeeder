@@ -40,4 +40,34 @@ a 4K coco1, and I didn't have enough RAM for the
 extra Life arrays in the code that I wrote,
 if the screen was full-sized.
 
+## Demo of Control Write & Data Read on Aardvark
+
+`sunday/alfadown-ff7b.py` was not outputting stuff
+correctly when I last touched it.
+
+But thanks to Phoenix and Thomas, they fixed the
+problem with Pin Directions.  I was using a PIO opcode
+that doesn't work for Pin Directions.
+
+A small BASIC program can be typed in to make
+the demo work:
+
+```
+10 POKE &HFF7A, 22  : REM write any byte to Control Port
+20 FOR I=1 TO 8
+30 X = PEEK(&HFF7B)
+40 PRINT X, CHR$(X)
+50 NEXT I
+```
+
+When that is run, the POKE to the control port will
+enable the Data Port machine to operate.  Then we can
+read the "Hello world..." message.  That FOR loop
+just reads the first 8 bytes of the message.
+
+Also if you want the Pico W to power up into a more
+sane state -- so it doesn't cause the coco to stall
+(due the the HALT being low) -- load `sunday/aard_boot.py`
+into the Pico's filesystem with the name `boot.py`.
+
 ## END
