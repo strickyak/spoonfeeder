@@ -1,6 +1,8 @@
-# On the idea of emulating the Wiznet 5100S indirect interface
+# On the idea of emulating the Wiznet W5100S indirect interface
 
-strick :: Tue Apr 23 2024
+`strick :: Tue Apr 23 2024`
+
+Reference: https://wiznet.io/product/iEthernetChips/W5100S
 
 ## Four Ports for the indirect interface.
 
