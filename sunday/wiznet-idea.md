@@ -1,4 +1,4 @@
-# On the idea of emulating the Wiznet W5100S indirect interface
+# On the idea of emulating the Wiznet W5100S indirect interface with the Pi Pico W
 
 `strick :: Tue Apr 23 2024`
 
